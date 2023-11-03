@@ -46,7 +46,10 @@ runs:
       shell: bash
 
     - name: Setting Up Proxy Environment
-      run: echo "ALL_PROXY=socks5://127.0.0.1:1080" >> $GITHUB_ENV
+      run: |
+        echo "ALL_PROXY=socks5://127.0.0.1:1080" >> $GITHUB_ENV
+        echo "HTTPS_PROXY=socks5://127.0.0.1:1080" >> $GITHUB_ENV
+        echo "HTTP_PROXY=socks5://127.0.0.1:1080" >> $GITHUB_ENV
       shell: bash
 
     - name: Show IP
