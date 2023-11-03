@@ -1,5 +1,5 @@
 name: 'Shadowsocks Connect via Outline'
-description: 'A GitHub Action to seamlessly connect to a Shadowsocks server. Ideal for facilitating secure and reliable connections in your GitHub workflows.'
+description: 'Connect to a Shadowsocks server with this GitHub Action.'
 author: 'Alexander Seliukov aka @asexsela'
 branding:
   icon: lock
