@@ -1,0 +1,60 @@
+name: 'Shadowsocks Connect via Outline'
+description: 'A GitHub Action to seamlessly connect to a Shadowsocks server. Ideal for facilitating secure and reliable connections in your GitHub workflows.'
+author: 'Alexander Seliukov aka @asexsela'
+branding:
+  icon: lock
+  color: blue
+inputs:
+  ip:
+    description: 'Shadowsocks server IP address'
+    required: true
+  port:
+    description: 'Shadowsocks server Port'
+    required: true
+  password:
+    description: 'Shadowsocks password'
+    required: true
+  encrypt_method:
+    description: "Encrypt method: rc4-md5, 
+                  aes-128-gcm, aes-192-gcm, aes-256-gcm,
+                  aes-128-cfb, aes-192-cfb, aes-256-cfb,
+                  aes-128-ctr, aes-192-ctr, aes-256-ctr,
+                  camellia-128-cfb, camellia-192-cfb,
+                  camellia-256-cfb, bf-cfb,
+                  chacha20-ietf-poly1305,
+                  xchacha20-ietf-poly1305,
+                  salsa20, chacha20 and chacha20-ietf.
+                  The default cipher is chacha20-ietf-poly1305."
+    required: true
+    default: 'chacha20-ietf-poly1305'
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Requirements
+      run: |
+        sudo apt update
+        sudo apt -y install shadowsocks-libev curl
+      shell: bash
+
+    - name: Show IP
+      run: curl wtfismyip.com
+      shell: bash
+
+    - name: Run Shadowsocks
+      run: |
+        nohup ss-local -s ${{ inputs.ip }} -p ${{ inputs.port }} -k "${{ inputs.password }}" -m ${{ inputs.encrypt_method }} -l 1080 -b 0.0.0.0 -u > ss-local.out 2> ss-local.err < /dev/null &
+      shell: bash
+
+    - name: Setting Up Proxy Environment
+      run: echo "ALL_PROXY=socks5://127.0.0.1:1080" >> $GITHUB_ENV
+      shell: bash
+
+    - name: Show IP
+      run: curl wtfismyip.com
+      shell: bash
+
+    - name: Kill ss-local connection
+      uses: webiny/action-post-run@3.0.0
+      if: always()
+      with:
+        run: sudo killall ss-local
