@@ -37,7 +37,7 @@ runs:
       shell: bash
 
     - name: Show IP
-      run: curl wtfismyip.com
+      run: curl -sL https://wtfismyip.com/json
       shell: bash
 
     - name: Run Shadowsocks
@@ -50,7 +50,7 @@ runs:
       shell: bash
 
     - name: Show IP
-      run: curl wtfismyip.com
+      run: curl -sL https://wtfismyip.com/json
       shell: bash
 
     - name: Kill ss-local connection
